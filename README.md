@@ -1,7 +1,3 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
-
 ## 🧠 User Management System
 
 This project is a **Role-Based Access Control (RBAC)** system built using the [NestJS](https://nestjs.com) framework. It provides a scalable and efficient way to manage user permissions across multiple microservices.
