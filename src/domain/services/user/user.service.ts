@@ -57,6 +57,7 @@ export class UserService {
     options?: FindUserOptions,
   ): Promise<User> {
     const user = await this.userRepository.findUserByEmail(email, options);
+    console.log(user);
     if (!user) throw new UserNotFoundByEmailError(email);
     return user;
   }

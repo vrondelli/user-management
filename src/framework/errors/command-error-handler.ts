@@ -24,7 +24,6 @@ export class CommandErrorHandler {
   }
 
   handle(error: any) {
-    console.log(error);
     this.logger.error('Command use case failed with error: ', error.message);
     if (this.isKnownError(error)) {
       throw error;

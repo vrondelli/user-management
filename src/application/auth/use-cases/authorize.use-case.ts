@@ -33,8 +33,6 @@ export class Authorize extends CommandUseCase<
   async execute(params: AuthorizeParams): Promise<AuthorizeResponse> {
     const session = await this.sessionService.getSessionById(params.sessionId);
 
-    console.log('Session:', session);
-
     if (!session || session.isExpired()) {
       throw new InvalidExpiredSessionError();
     }

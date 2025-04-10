@@ -39,7 +39,6 @@ export class SessionEntity {
   sessionTime: number;
 
   toDomain(): DomainSession {
-    console.log(typeof this.expiresAt);
     return new DomainSession({
       id: this.id,
       user: this.user.toDomain(),

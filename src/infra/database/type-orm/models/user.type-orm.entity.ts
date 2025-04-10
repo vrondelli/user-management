@@ -33,7 +33,6 @@ export class UserEntity {
   updatedAt?: string;
 
   toDomain(): DomainUser {
-    console.log(this);
     return new DomainUser({
       id: this.id,
       organizationId: this.organizationId,

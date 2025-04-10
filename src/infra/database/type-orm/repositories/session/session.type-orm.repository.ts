@@ -23,11 +23,9 @@ export class SessionTypeOrmRepository extends SessionRepository {
       const sessionEntity = this.sessionRepository.create(
         SessionEntity.fromDomain(session),
       );
-      console.log(sessionEntity);
       const savedSession = await this.sessionRepository.save(sessionEntity);
       return savedSession.toDomain();
     } catch (error) {
-      console.log(error);
       throw this.handleDatabaseError(error);
     }
   }

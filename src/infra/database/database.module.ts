@@ -24,7 +24,6 @@ import { GroupTypeOrmRepository } from './type-orm/repositories/group/group.type
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
-        logging: true,
         url: configService.getOrThrow('app.database.clientUrl'),
         entities: TypeOrmConfig.entities,
       }),
