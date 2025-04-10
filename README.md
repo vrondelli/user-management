@@ -68,13 +68,39 @@ $ npm run test:cov
 
 ## 🗂️ Project Structure
 
-This project is a monorepo managed by NestJS CLI. The main REST application is located in the `rest` directory.
+This project is a monorepo managed by NestJS CLI and follows the principles of **Clean Architecture** to ensure scalability, maintainability, and separation of concerns. The main REST application is located in the `rest` directory.
 
-- **Scripts**: Utility scripts for managing migrations and initial data are located in the [`src/scripts`](./src/scripts) folder:
-  - `create-migration.ts`: Create a new migration.
-  - `generate-migration.ts`: Generate a migration based on schema changes.
-  - `run-migration.ts`: Run all pending migrations.
-  - `create-initial-users.ts`: Populate the database with initial users.
+### 🏗️ Clean Architecture Layers
+
+1. **Domain Layer**:
+
+- Contains the core business logic and entities.
+- Includes services like `UserService`, `RoleService`, and `SessionService` located in [`src/domain/services`](./src/domain/services).
+- Defines repositories as abstractions, such as `UserRepository` and `RoleRepository`, located in [`src/domain/repositories`](./src/domain/repositories).
+
+2. **Application Layer**:
+
+- Implements use cases that orchestrate domain logic, such as `Login` and `Authorize` use cases.
+- Use cases are located in [`src/application`](./src/application).
+
+3. **Infrastructure Layer**:
+
+- Handles database interactions, external APIs, and other technical details.
+- Includes TypeORM models and repositories, such as `UserTypeOrmRepository` and `RoleTypeOrmRepository`, located in [`src/infra/database/type-orm`](./src/infra/database/type-orm).
+
+4. **Presentation Layer**:
+
+- Manages the REST API endpoints and user-facing interfaces.
+- Includes controllers like `UserController` and DTOs for request/response validation, located in [`src/presentation`](./src/presentation).
+
+### 📜 Scripts
+
+Utility scripts for managing migrations and initial data are located in the [`src/scripts`](./src/scripts) folder:
+
+- `create-migration.ts`: Create a new migration.
+- `generate-migration.ts`: Generate a migration based on schema changes.
+- `run-migration.ts`: Run all pending migrations.
+- `create-initial-users.ts`: Populate the database with initial users.
 
 ## 🛠️ Deployment
 
