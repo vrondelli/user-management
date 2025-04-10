@@ -1,0 +1,40 @@
+@startuml
+title Login Use Case – Sequence Diagram (Logic Flow)
+
+actor User
+participant "Login"
+
+User -> "Login": Submit email and password
+
+"Login" -> "Login": Find user by email
+
+alt User not found
+    "Login" -> User: InvalidCredentialsError
+    note right of "Login"
+      Error details:
+      - message: "Email or password are invalid."
+      - code: "INVALID_CREDENTIALS"
+      - reason: "AUTHENTICATION"
+      - httpStatus: 401
+    end note
+else User found
+    "Login" -> "Login": Validate password (input vs stored hash)
+
+    alt Password is incorrect
+        "Login" -> User: InvalidCredentialsError
+        note right of "Login"
+          Error details:
+          - message: "Email or password are invalid."
+          - code: "INVALID_CREDENTIALS"
+          - reason: "AUTHENTICATION"
+          - httpStatus: 401
+        end note
+    else Password is correct
+        "Login" -> "Login": Get sessionTime from user's config
+        "Login" -> "Login": Create session
+        "Login" -> "Login": Sign JWT with sessionId
+        "Login" -> User: Return accessToken
+    end
+end
+
+@enduml
