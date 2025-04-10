@@ -17,9 +17,20 @@ export class GroupTypeOrmRepository extends GroupRepository {
   }
 
   async getById(id: string): Promise<Group | null> {
+    return this.getGroupByField('id', id);
+  }
+
+  async getByName(name: string): Promise<Group | null> {
+    return this.getGroupByField('name', name);
+  }
+
+  private async getGroupByField(
+    field: keyof GroupTypeOrmEntity,
+    value: string,
+  ): Promise<Group | null> {
     try {
       const groupEntity = await this.groupRepository.findOne({
-        where: { id },
+        where: { [field]: value },
         relations: ['parent'],
       });
 
@@ -27,21 +38,7 @@ export class GroupTypeOrmRepository extends GroupRepository {
         return null;
       }
 
-      const loadParents = async (
-        entity: GroupTypeOrmEntity,
-      ): Promise<GroupTypeOrmEntity> => {
-        if (!entity.parent) {
-          return entity;
-        }
-        const parentEntity = (await this.groupRepository.findOne({
-          where: { id: entity.parent.id },
-          relations: ['parent'],
-        })) as GroupTypeOrmEntity;
-        entity.parent = await loadParents(parentEntity);
-        return entity;
-      };
-
-      await loadParents(groupEntity);
+      await this.loadParents(groupEntity);
 
       return groupEntity.toDomain();
     } catch (error) {
@@ -49,37 +46,18 @@ export class GroupTypeOrmRepository extends GroupRepository {
     }
   }
 
-  async getByName(name: string): Promise<Group | null> {
-    try {
-      const groupEntity = await this.groupRepository.findOne({
-        where: { name },
-        relations: ['parent'],
-      });
-
-      if (!groupEntity) {
-        return null;
-      }
-
-      const loadParents = async (
-        entity: GroupTypeOrmEntity,
-      ): Promise<GroupTypeOrmEntity> => {
-        if (!entity.parent) {
-          return entity;
-        }
-        const parentEntity = (await this.groupRepository.findOne({
-          where: { id: entity.parent.id },
-          relations: ['parent'],
-        })) as GroupTypeOrmEntity;
-        entity.parent = await loadParents(parentEntity);
-        return entity;
-      };
-
-      await loadParents(groupEntity);
-
-      return groupEntity.toDomain();
-    } catch (error) {
-      throw this.handleDatabaseError(error);
+  private async loadParents(
+    entity: GroupTypeOrmEntity,
+  ): Promise<GroupTypeOrmEntity> {
+    if (!entity.parent) {
+      return entity;
     }
+    const parentEntity = (await this.groupRepository.findOne({
+      where: { id: entity.parent.id },
+      relations: ['parent'],
+    })) as GroupTypeOrmEntity;
+    entity.parent = await this.loadParents(parentEntity);
+    return entity;
   }
 
   private handleDatabaseError(error: unknown): DatabaseError {
