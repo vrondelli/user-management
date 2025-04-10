@@ -12,6 +12,8 @@ export class User {
   public createdAt: string;
   public updatedAt?: string;
 
+  private readonly defaultUserGroupName = 'default';
+
   constructor({
     id,
     name,
@@ -50,5 +52,11 @@ export class User {
 
   getSessionTime(): number | undefined {
     return this.group?.getConfig().sessionTime;
+  }
+
+  getNewUserGroup(): string {
+    return (
+      this.group?.getConfig().newUserGroupName || this.defaultUserGroupName
+    );
   }
 }

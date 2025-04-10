@@ -126,8 +126,8 @@ export class AuthGuard implements CanActivate {
     userPermissions: string[],
     context: ExecutionContext,
   ): Promise<void> {
-    console.log('User permissions:', userPermissions);
     const requiredPermission = this.getRequiredPermission(context);
+    console.log('User permissions:', userPermissions, requiredPermission);
     if (!requiredPermission) {
       return;
     }
@@ -153,6 +153,8 @@ export class AuthGuard implements CanActivate {
     try {
       const { sessionId } = this.jwtService.verifyToken(request);
       const authUserData = await this.authProvider.authorize(sessionId);
+
+      console.log(authUserData);
       await this.validateUserPermissions(authUserData.permissions, context);
       request.authUserData = authUserData;
     } catch (e) {

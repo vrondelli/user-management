@@ -44,7 +44,7 @@ async function createInitialUsers() {
         name: 'Regular User',
         email: 'user@example.com',
         password: await bcrypt.hash('password@123', 10),
-        role: adminRole,
+        role: userRole,
         group: userGroup,
         organizationId: 'org-123',
       },

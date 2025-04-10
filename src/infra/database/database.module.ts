@@ -14,6 +14,8 @@ import { SessionTypeOrmRepository } from './type-orm/repositories/session/sessio
 import { Group } from '@domain/entities/group/group.entity';
 import TypeOrmConfig from './type-orm/type-orm.config';
 import { EntitySchema } from 'typeorm';
+import { GroupRepository } from '@domain/repositories/group.repository';
+import { GroupTypeOrmRepository } from './type-orm/repositories/group/group.type-orm.repository';
 
 @Module({
   imports: [
@@ -22,6 +24,7 @@ import { EntitySchema } from 'typeorm';
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
+        logging: true,
         url: configService.getOrThrow('app.database.clientUrl'),
         entities: TypeOrmConfig.entities,
       }),
@@ -35,7 +38,8 @@ import { EntitySchema } from 'typeorm';
     { provide: UserRepository, useClass: UserTypeOrmRepository },
     { provide: RoleRepository, useClass: RoleTypeOrmRepository },
     { provide: SessionRepository, useClass: SessionTypeOrmRepository },
+    { provide: GroupRepository, useClass: GroupTypeOrmRepository },
   ],
-  exports: [UserRepository, RoleRepository, SessionRepository],
+  exports: [UserRepository, RoleRepository, SessionRepository, GroupRepository],
 })
 export class DatabaseModule {}

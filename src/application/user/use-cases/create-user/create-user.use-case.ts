@@ -39,16 +39,20 @@ export class CreateUser extends CommandUseCase<
     this.logger.debug('Executing create user use case', data);
 
     await this.userService.validateUserExistsByEmail(data.email);
-    const role = await this.userService.validateUserCanAssignRole(
-      data.creatorUserId,
-      data.role,
-    );
+    const { role, user: creatorUser } =
+      await this.userService.validateUserCanAssignRole(
+        data.creatorUserId,
+        data.role,
+      );
+
     const hashedPassword = await this.cryptoService.hashPassword(data.password);
+    const newUserGroup = await this.userService.getNewUserGroup(creatorUser);
     const newUser = await this.userService.createUser({
       email: data.email,
       password: hashedPassword,
       name: data.name,
       organizationId: data.organizationId,
+      group: newUserGroup,
       role,
     });
 

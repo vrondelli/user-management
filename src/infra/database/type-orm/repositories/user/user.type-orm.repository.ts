@@ -11,12 +11,15 @@ import { UserEntity } from '../../models/user.type-orm.entity';
 import { DomainError } from '@framework/errors/domain.error';
 import { DatabaseError } from '@framework/errors/database.error';
 import { ErrorReason } from '@framework/errors/error-reason';
+import { GroupRepository } from '@domain/repositories/group.repository';
+import { Group } from '@domain/entities/group/group.entity';
 
 @Injectable()
 export class UserTypeOrmRepository extends UserRepository {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
+    private readonly groupRepository: GroupRepository,
   ) {
     super();
   }
@@ -42,7 +45,18 @@ export class UserTypeOrmRepository extends UserRepository {
         relations: this.getRelationOptions(options),
       });
 
-      return userEntity ? userEntity.toDomain() : null;
+      if (!userEntity) return null;
+
+      const dominUser = userEntity.toDomain();
+
+      if (options?.group && userEntity.group) {
+        const group = await this.findGroupWithHierarchy(userEntity.group.id);
+        if (group) {
+          dominUser.group = group;
+        }
+      }
+
+      return dominUser;
     } catch (error) {
       throw this.handleDatabaseError(error);
     }
@@ -58,10 +72,40 @@ export class UserTypeOrmRepository extends UserRepository {
         relations: this.getRelationOptions(options),
       });
 
-      return userEntity ? userEntity.toDomain() : null;
+      if (!userEntity) return null;
+
+      const dominUser = userEntity.toDomain();
+
+      if (options?.group && userEntity.group) {
+        const group = await this.findGroupWithHierarchy(userEntity.group.id);
+        if (group) {
+          dominUser.group = group;
+        }
+      }
+
+      return dominUser;
     } catch (error) {
       throw this.handleDatabaseError(error);
     }
+  }
+
+  private async findUserWithGroup(id: string, options?: FindUserOptions) {
+    const user = await this.userRepository.findOne({
+      where: { id },
+      relations: this.getRelationOptions(options),
+    });
+
+    if (!user?.group) return null;
+
+    const group = await this.findGroupWithHierarchy(user.group.name);
+    if (!group) return null;
+    const domainUser = user.toDomain();
+    domainUser.group = group;
+    return domainUser;
+  }
+  private async findGroupWithHierarchy(id?: string): Promise<Group | null> {
+    if (!id) return null;
+    return this.groupRepository.getById(id);
   }
 
   private handleDatabaseError(error: unknown): DomainError | DatabaseError {

@@ -1,6 +1,7 @@
 export type GroupConfig = {
   [key: string]: any;
   sessionTime?: number;
+  newUserGroupName?: string;
 };
 
 export class Group {

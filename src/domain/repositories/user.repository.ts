@@ -1,12 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { User } from '../entities/user/user.entity';
 import { Role } from '@domain/entities/role/role.entity';
+import { Group } from '@domain/entities/group/group.entity';
 
 export type SaveUserParams = {
   name: string;
   email: string;
   password: string;
   organizationId: string;
+  group: Group;
   role: Role;
 };
 

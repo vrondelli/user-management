@@ -78,6 +78,7 @@ export class Login extends CommandUseCase<LoginParams, LoginPayload> {
   }
 
   private async validatePassword(password: string, user: User): Promise<void> {
+    console.log(user.password, user.password);
     const isPasswordValid = await this.cryptoService.comparePassword(
       password,
       user.password,

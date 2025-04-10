@@ -23,7 +23,6 @@ export class GroupTypeOrmEntity {
   @ManyToOne(() => GroupTypeOrmEntity, (group) => group.children, {
     nullable: true,
     onDelete: 'SET NULL',
-    eager: true,
   })
   parent?: GroupTypeOrmEntity;
 

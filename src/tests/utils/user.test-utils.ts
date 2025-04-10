@@ -8,6 +8,7 @@ import {
 import { createMockRole, createMockTypeOrmRole } from './role.test-utils';
 import { UserService } from '@domain/services/user/user.service';
 import { CryptoService } from '@domain/services/crypto.service';
+import { Group } from '@domain/entities/group/group.entity';
 
 export const createMockTypeOrmUser = (overrides: Partial<User> = {}) => {
   return createMockTypeOrmEntity(UserEntity, {
@@ -20,6 +21,15 @@ export const createMockTypeOrmUser = (overrides: Partial<User> = {}) => {
     createdAt: new Date(overrides.createdAt || new Date()),
     updatedAt: new Date(overrides.updatedAt || new Date()),
     role: createMockTypeOrmRole(overrides.role),
+  });
+};
+
+export const createMockGroup = (overrides: Partial<Group> = {}): Group => {
+  return new Group({
+    id: overrides.id || Math.floor(Math.random() * 1000).toString(),
+    name: overrides.name || 'test_group',
+    config: overrides.config || {},
+    parent: overrides.parent || undefined,
   });
 };
 
@@ -43,6 +53,7 @@ export const createMockSaveUserParams = (
     name: overrides.name || 'test_user',
     email: overrides.email || 'test_user@example.com',
     password: overrides.password || 'hashed_password',
+    group: createMockGroup(overrides.group),
     organizationId: overrides.organizationId || 'test_organization',
     role: overrides.role || createMockRole(),
   };

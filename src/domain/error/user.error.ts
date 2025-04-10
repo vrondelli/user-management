@@ -48,3 +48,14 @@ export class UserCannotAssignRoleError extends DomainError {
     );
   }
 }
+
+@ErrorDecorator(DomainError)
+export class UserMisconfiguredError extends DomainError {
+  constructor() {
+    super(
+      'User is misconfigured. Please contact support.',
+      ErrorReason.BUSINESS_RULES,
+      'USER_MISCONFIGURED',
+    );
+  }
+}
