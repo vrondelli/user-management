@@ -116,12 +116,6 @@ When you're ready to deploy the application, follow these steps:
 
 For more details, refer to the [NestJS deployment documentation](https://docs.nestjs.com/deployment).
 
-## 🛠️ Resources
-
-- [NestJS Documentation](https://docs.nestjs.com)
-- [Discord Channel](https://discord.gg/G7Qnnhy)
-- [NestJS Devtools](https://devtools.nestjs.com)
-
 ## 📝 License
 
 This project is [MIT licensed](https://opensource.org/licenses/MIT).
